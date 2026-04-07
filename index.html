@@ -75,11 +75,23 @@
       text-align: center;
       padding: 8rem 2rem 5rem;
       position: relative;
-      background:
-        radial-gradient(circle at 30% 40%, rgba(232,146,45,0.06) 0%, transparent 50%),
-        radial-gradient(circle at 70% 60%, rgba(232,146,45,0.04) 0%, transparent 50%);
+      background: url('images/kuchnia-biala.jpg') center/cover no-repeat fixed;
     }
-    .hero-content { max-width: 720px; }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(11,11,11,0.82) 0%,
+        rgba(11,11,11,0.7) 40%,
+        rgba(11,11,11,0.85) 100%
+      );
+    }
+    .hero-content { max-width: 720px; position: relative; z-index: 1; }
+    .hero-logo {
+      width: 180px; height: 180px; object-fit: cover;
+      border-radius: 20px; margin: 0 auto 2.5rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(232,146,45,0.15);
+    }
     .hero-badge {
       display: inline-flex; align-items: center; gap: 0.5rem;
       background: rgba(232,146,45,0.1); border: 1px solid rgba(232,146,45,0.2);
@@ -222,7 +234,7 @@
 
     /* ─── CONTACT ─── */
     .contact-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;
+      max-width: 550px; margin: 0 auto; text-align: center;
     }
     .contact-left h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
     .contact-left > p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 2rem; font-weight: 300; line-height: 1.7; }
@@ -247,17 +259,6 @@
     .contact-card-text a:hover { color: var(--orange-hover); }
     .contact-card-text small { display: block; color: var(--text-dim); font-size: 0.8rem; margin-top: 2px; }
 
-    .contact-form { display: flex; flex-direction: column; gap: 0.8rem; }
-    .contact-form input, .contact-form textarea {
-      background: var(--bg3); border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px; padding: 0.9rem 1.1rem;
-      color: var(--text); font-family: inherit; font-size: 0.9rem;
-      transition: border-color 0.25s; font-weight: 300;
-    }
-    .contact-form input::placeholder, .contact-form textarea::placeholder { color: #555; }
-    .contact-form input:focus, .contact-form textarea:focus { outline: none; border-color: var(--orange); }
-    .contact-form textarea { resize: vertical; min-height: 120px; }
-    .contact-form .btn { align-self: flex-start; margin-top: 0.3rem; }
 
     /* ─── FOOTER ─── */
     .footer {
@@ -296,7 +297,6 @@
       }
       .gallery-item:nth-child(1) { grid-column: 1 / -1; grid-row: auto; aspect-ratio: 16/10; }
       .services-grid { grid-template-columns: 1fr; }
-      .contact-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 640px) {
@@ -330,6 +330,7 @@
   <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
+      <img src="images/logo.jpg" alt="Meble Sacha" class="hero-logo">
       <div class="hero-badge">Meble na wymiar</div>
       <h1>Tworzymy meble<br><span>z pasją do detali</span></h1>
       <p>Kuchnie, łazienki, pokoje — każdy projekt dopasowany do Twojego wnętrza. Precyzja wykonania i nowoczesny design.</p>
@@ -478,12 +479,6 @@
             </div>
           </a>
         </div>
-        <form class="contact-form" onsubmit="submitForm(event)">
-          <input type="text" placeholder="Imię i nazwisko" required>
-          <input type="tel" placeholder="Numer telefonu" required>
-          <textarea placeholder="Opisz czego potrzebujesz — rodzaj mebli, wymiary, materiały..."></textarea>
-          <button type="submit" class="btn btn-fill">Wyślij zapytanie</button>
-        </form>
       </div>
     </div>
   </section>
@@ -515,13 +510,6 @@
     }
     function closeLB() { document.getElementById('lightbox').classList.remove('open'); }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
-
-    // Form
-    function submitForm(e) {
-      e.preventDefault();
-      alert('Dziękujemy! Skontaktujemy się wkrótce.');
-      e.target.reset();
-    }
 
     // Reveal on scroll
     const obs = new IntersectionObserver(entries => {
