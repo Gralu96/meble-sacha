@@ -225,7 +225,10 @@
     .contact-center {
       max-width: 520px; margin: 0 auto; text-align: center;
     }
-    .contact-center h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .contact-center h3 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .contact-center .contact-address {
+      color: var(--text-dim); font-size: 0.88rem; font-weight: 300; margin-bottom: 1.8rem;
+    }
     .contact-center > p { color: var(--text-dim); font-size: 0.95rem; margin-bottom: 2rem; font-weight: 300; line-height: 1.7; }
 
     .contact-card {
@@ -257,6 +260,68 @@
     }
     .footer p { font-size: 0.82rem; color: #555; font-weight: 300; }
     .footer a { color: var(--orange); }
+    .footer-links {
+      margin-top: 0.6rem; display: flex; justify-content: center; gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-size: 0.78rem; color: #555; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--orange); }
+
+    /* ─── COOKIE BANNER ─── */
+    .cookie-banner {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 3000;
+      background: var(--bg3); border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 1.2rem 2rem;
+    }
+    .cookie-banner.show { display: block; }
+    .cookie-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .cookie-inner p {
+      font-size: 0.82rem; color: var(--text-dim); font-weight: 300; flex: 1; min-width: 250px;
+    }
+    .cookie-inner p a { color: var(--orange); text-decoration: underline; }
+    .cookie-btns { display: flex; gap: 0.6rem; flex-shrink: 0; }
+    .cookie-btn {
+      padding: 0.5rem 1.2rem; border-radius: 8px; font-family: inherit;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer; border: none;
+      transition: all 0.2s;
+    }
+    .cookie-accept { background: var(--orange); color: var(--bg); }
+    .cookie-accept:hover { background: var(--orange-hover); }
+    .cookie-reject {
+      background: transparent; color: var(--text-dim);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    .cookie-reject:hover { border-color: var(--orange); color: var(--orange); }
+
+    /* ─── PRIVACY MODAL ─── */
+    .privacy-modal {
+      display: none; position: fixed; inset: 0; z-index: 4000;
+      background: rgba(0,0,0,0.9); align-items: center; justify-content: center;
+      padding: 2rem;
+    }
+    .privacy-modal.open { display: flex; }
+    .privacy-box {
+      background: var(--bg2); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; padding: 2.5rem; max-width: 700px; width: 100%;
+      max-height: 80vh; overflow-y: auto; position: relative;
+    }
+    .privacy-box h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--orange); }
+    .privacy-box h3 { font-size: 1rem; font-weight: 600; margin-top: 1.2rem; margin-bottom: 0.4rem; }
+    .privacy-box p, .privacy-box li {
+      font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; font-weight: 300;
+    }
+    .privacy-box ul { padding-left: 1.2rem; margin-bottom: 0.8rem; }
+    .privacy-close {
+      position: absolute; top: 1rem; right: 1.2rem;
+      font-size: 1.8rem; color: var(--text); background: none; border: none;
+      cursor: pointer; font-family: inherit; line-height: 1;
+    }
 
     /* ─── LIGHTBOX ─── */
     .lightbox {
@@ -292,7 +357,22 @@
       .menu-btn { display: flex; }
       .categories-grid { grid-template-columns: 1fr; }
       .cta-banner { padding: 2.5rem 1.5rem; }
-      .blum-badge { display: none; }
+
+      /* Blum badge mobile — pod navbarem */
+      .blum-badge {
+        display: none;
+      }
+      .blum-mobile {
+        display: flex !important;
+        align-items: center; justify-content: center; gap: 0.5rem;
+        background: rgba(255,255,255,0.03);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        padding: 0.5rem 1rem;
+        position: fixed; top: 60px; left: 0; right: 0; z-index: 999;
+      }
+      .blum-mobile img { height: 18px; border-radius: 3px; }
+      .blum-mobile span { font-size: 0.62rem; color: var(--text-dim); font-weight: 400; }
+      .hero { padding-top: 9rem; }
     }
   </style>
 </head>
@@ -318,6 +398,12 @@
       </button>
     </div>
   </nav>
+
+  <!-- BLUM MOBILE BAR (visible only on mobile) -->
+  <div class="blum-mobile" style="display:none;">
+    <img src="images/blum.jpg" alt="Blum">
+    <span>stosujemy wyłącznie okucia blum</span>
+  </div>
 
   <!-- HERO -->
   <section class="hero">
@@ -359,7 +445,7 @@
     </div>
   </section>
 
-  <!-- CO ROBIMY (merged categories + gallery) -->
+  <!-- CO ROBIMY -->
   <section class="section" id="co-robimy">
     <div class="container">
       <div class="section-title">
@@ -433,6 +519,7 @@
       </div>
       <div class="contact-center">
         <h3>Grzegorz Sacha</h3>
+        <p class="contact-address">Bzionkowska 1D, 46-380 Dobrodzień</p>
         <p>Meble na wymiar — kuchnie, łazienki, salony. Projektuję, produkuję i montuję. Zapraszam do kontaktu!</p>
 
         <a href="tel:+48601166731" class="contact-card">
@@ -466,7 +553,64 @@
   <footer class="footer">
     <p>&copy; 2026 <a href="#">Meble Sacha</a> — Grzegorz Sacha. Wszelkie prawa zastrzeżone.</p>
     <p style="margin-top: 0.5rem;">Projekt i wykonanie strony: <strong>Szymon Grahl</strong></p>
+    <div class="footer-links">
+      <a href="#" onclick="openPrivacy(); return false;">Polityka prywatności</a>
+      <a href="#" onclick="openPrivacy(); return false;">Cookies</a>
+    </div>
   </footer>
+
+  <!-- COOKIE BANNER -->
+  <div class="cookie-banner" id="cookieBanner">
+    <div class="cookie-inner">
+      <p>Ta strona korzysta z plików cookies w celu zapewnienia prawidłowego działania. Korzystając ze strony wyrażasz zgodę na ich użycie. <a href="#" onclick="openPrivacy(); return false;">Polityka prywatności</a></p>
+      <div class="cookie-btns">
+        <button class="cookie-btn cookie-accept" onclick="acceptCookies()">Akceptuję</button>
+        <button class="cookie-btn cookie-reject" onclick="rejectCookies()">Odrzuć</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRIVACY / COOKIES MODAL -->
+  <div class="privacy-modal" id="privacyModal" onclick="if(event.target===this)closePrivacy()">
+    <div class="privacy-box">
+      <button class="privacy-close" onclick="closePrivacy()">&times;</button>
+      <h2>Polityka prywatności i cookies</h2>
+
+      <h3>1. Administrator danych</h3>
+      <p>Administratorem danych osobowych jest Grzegorz Sacha, prowadzący działalność pod nazwą Meble Sacha, z siedzibą: Bzionkowska 1D, 46-380 Dobrodzień. Kontakt: grzegorzsacha@onet.eu, tel. 601 166 731.</p>
+
+      <h3>2. Zakres zbieranych danych</h3>
+      <p>Strona nie zbiera danych osobowych automatycznie. Dane osobowe przetwarzamy wyłącznie, gdy sam się z nami skontaktujesz (telefon, e-mail, Facebook).</p>
+
+      <h3>3. Cel przetwarzania</h3>
+      <p>Dane kontaktowe przetwarzamy wyłącznie w celu odpowiedzi na zapytania dotyczące naszych usług, na podstawie art. 6 ust. 1 lit. f) RODO (uzasadniony interes administratora).</p>
+
+      <h3>4. Pliki cookies</h3>
+      <p>Strona może korzystać z następujących rodzajów plików cookies:</p>
+      <ul>
+        <li><strong>Niezbędne</strong> — wymagane do prawidłowego działania strony (np. zapamiętanie zgody na cookies).</li>
+        <li><strong>Funkcjonalne</strong> — zapamiętują preferencje użytkownika.</li>
+      </ul>
+      <p>Strona nie wykorzystuje cookies analitycznych ani reklamowych. Pliki cookies nie służą do identyfikacji użytkownika.</p>
+
+      <h3>5. Zarządzanie cookies</h3>
+      <p>Możesz w każdej chwili zmienić ustawienia cookies w swojej przeglądarce lub usunąć zapisane pliki cookies. Instrukcje znajdziesz w ustawieniach swojej przeglądarki internetowej.</p>
+
+      <h3>6. Prawa użytkownika</h3>
+      <p>Masz prawo do:</p>
+      <ul>
+        <li>dostępu do swoich danych osobowych,</li>
+        <li>sprostowania, usunięcia lub ograniczenia przetwarzania danych,</li>
+        <li>wniesienia sprzeciwu wobec przetwarzania,</li>
+        <li>wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</li>
+      </ul>
+
+      <h3>7. Kontakt</h3>
+      <p>W sprawie danych osobowych kontaktuj się: grzegorzsacha@onet.eu lub telefonicznie: 601 166 731.</p>
+
+      <p style="margin-top:1.5rem; font-size:0.78rem; color:#666;">Ostatnia aktualizacja: kwiecień 2026</p>
+    </div>
+  </div>
 
   <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox" onclick="closeLB()">
@@ -490,6 +634,24 @@
     }
     function closeLB() { document.getElementById('lightbox').classList.remove('open'); }
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+
+    // Cookie banner
+    function acceptCookies() {
+      localStorage.setItem('cookies_consent', 'accepted');
+      document.getElementById('cookieBanner').classList.remove('show');
+    }
+    function rejectCookies() {
+      localStorage.setItem('cookies_consent', 'rejected');
+      document.getElementById('cookieBanner').classList.remove('show');
+    }
+    if (!localStorage.getItem('cookies_consent')) {
+      document.getElementById('cookieBanner').classList.add('show');
+    }
+
+    // Privacy modal
+    function openPrivacy() { document.getElementById('privacyModal').classList.add('open'); }
+    function closePrivacy() { document.getElementById('privacyModal').classList.remove('open'); }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePrivacy(); });
 
     // Reveal on scroll
     const obs = new IntersectionObserver(entries => {
