@@ -178,7 +178,7 @@
     .feature-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
     .feature-card p { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; font-weight: 300; }
 
-    /* ─── CATEGORIES + GALLERY (merged) ─── */
+    /* ─── CATEGORIES ─── */
     .categories-grid {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem;
     }
@@ -208,6 +208,12 @@
     .category-overlay p {
       font-size: 0.82rem; color: var(--orange); font-weight: 400;
     }
+    .cat-count {
+      font-size: 0.74rem; color: rgba(255,255,255,0.45);
+      margin-top: 0.25rem; font-weight: 300;
+      transition: color 0.3s;
+    }
+    .category-card:hover .cat-count { color: rgba(232,146,45,0.8); }
 
     /* ─── CTA BANNER ─── */
     .cta-banner {
@@ -323,19 +329,64 @@
       cursor: pointer; font-family: inherit; line-height: 1;
     }
 
+    /* ─── GALLERY MODAL ─── */
+    .gallery-modal {
+      display: none; position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.92); align-items: flex-start; justify-content: center;
+      padding: 2rem; overflow-y: auto;
+    }
+    .gallery-modal.open { display: flex; }
+    .gallery-box {
+      background: var(--bg2); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px; width: 100%; max-width: 1000px;
+      margin: auto; padding: 2rem; position: relative;
+    }
+    .gallery-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem; padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .gallery-header h3 { font-size: 1.3rem; font-weight: 700; color: var(--orange); }
+    .gallery-close {
+      font-size: 2.2rem; color: var(--text); background: none; border: none;
+      cursor: pointer; line-height: 1; padding: 0; font-family: inherit;
+    }
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem;
+    }
+    .gallery-grid img {
+      width: 100%; aspect-ratio: 4/3; object-fit: cover;
+      border-radius: 8px; cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .gallery-grid img:hover { transform: scale(1.03); opacity: 0.85; }
+
     /* ─── LIGHTBOX ─── */
     .lightbox {
-      display: none; position: fixed; inset: 0; z-index: 2000;
-      background: rgba(0,0,0,0.95); align-items: center; justify-content: center;
-      padding: 2rem; cursor: pointer;
+      display: none; position: fixed; inset: 0; z-index: 3000;
+      background: rgba(0,0,0,0.97); align-items: center; justify-content: center;
+      padding: 2rem;
     }
     .lightbox.open { display: flex; }
-    .lightbox img { max-width: 92vw; max-height: 92vh; object-fit: contain; border-radius: 8px; }
+    .lightbox img {
+      max-width: 88vw; max-height: 88vh; object-fit: contain;
+      border-radius: 8px; cursor: default;
+    }
     .lightbox-x {
       position: absolute; top: 1.2rem; right: 1.5rem;
       font-size: 2.2rem; color: #fff; background: none; border: none; cursor: pointer;
       font-family: inherit; line-height: 1;
     }
+    .lb-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      background: rgba(255,255,255,0.1); border: none; color: #fff;
+      font-size: 2.5rem; cursor: pointer; padding: 0.4rem 0.9rem;
+      border-radius: 8px; transition: background 0.2s; line-height: 1;
+      font-family: inherit;
+    }
+    .lb-nav:hover { background: rgba(255,255,255,0.22); }
+    .lb-prev { left: 1rem; }
+    .lb-next { right: 1rem; }
 
     /* ─── ANIMATIONS ─── */
     .reveal {
@@ -348,6 +399,7 @@
     @media (max-width: 900px) {
       .features-grid { grid-template-columns: 1fr; }
       .categories-grid { grid-template-columns: 1fr 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
       .blum-badge span { display: none; }
     }
 
@@ -356,7 +408,10 @@
       .navbar-links.open { display: flex; }
       .menu-btn { display: flex; }
       .categories-grid { grid-template-columns: 1fr; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-box { padding: 1.5rem 1rem; }
       .cta-banner { padding: 2.5rem 1.5rem; }
+      .lb-nav { font-size: 1.8rem; padding: 0.3rem 0.7rem; }
 
       /* Blum badge mobile — pod navbarem */
       .blum-badge {
@@ -453,48 +508,61 @@
         <p>Kompleksowa obsługa — od pomiaru do montażu</p>
       </div>
       <div class="categories-grid">
-        <div class="category-card reveal" onclick="openLB(this)">
+
+        <div class="category-card reveal" onclick="openGallery('kuchenne')">
           <img src="images/kuchnia-biala.jpg" alt="Meble kuchenne" loading="lazy">
           <div class="category-overlay">
             <h3>Meble kuchenne</h3>
             <p>Zabudowy kuchenne na wymiar</p>
+            <span class="cat-count">18 zdjęć →</span>
           </div>
         </div>
-        <div class="category-card reveal" onclick="openLB(this)">
+
+        <div class="category-card reveal" onclick="openGallery('salon')">
           <img src="images/salon.jpg" alt="Meble do salonu" loading="lazy">
           <div class="category-overlay">
             <h3>Meble do salonu</h3>
             <p>Szafki RTV, komody, regały</p>
+            <span class="cat-count">6 zdjęć →</span>
           </div>
         </div>
-        <div class="category-card reveal" onclick="openLB(this)">
+
+        <div class="category-card reveal" onclick="openGallery('szafy')">
           <img src="images/szafa-lustra.jpg" alt="Szafy na wymiar" loading="lazy">
           <div class="category-overlay">
             <h3>Szafy na wymiar</h3>
             <p>Szafy przesuwne i garderoby</p>
+            <span class="cat-count">12 zdjęć →</span>
           </div>
         </div>
-        <div class="category-card reveal" onclick="openLB(this)">
+
+        <div class="category-card reveal" onclick="openGallery('sypialnia')">
           <img src="images/szafa-skos.jpg" alt="Meble do sypialni" loading="lazy">
           <div class="category-overlay">
             <h3>Meble do sypialni</h3>
             <p>Zabudowy, szafy pod skosem</p>
+            <span class="cat-count">5 zdjęć →</span>
           </div>
         </div>
-        <div class="category-card reveal" onclick="openLB(this)">
+
+        <div class="category-card reveal" onclick="openGallery('lazienka')">
           <img src="images/lazienka.jpg" alt="Meble łazienkowe" loading="lazy">
           <div class="category-overlay">
             <h3>Meble łazienkowe</h3>
             <p>Szafki pod umywalkę, zabudowy</p>
+            <span class="cat-count">3 zdjęcia →</span>
           </div>
         </div>
-        <div class="category-card reveal" onclick="openLB(this)">
+
+        <div class="category-card reveal" onclick="openGallery('biurowe')">
           <img src="images/pokoj.jpg" alt="Meble biurowe" loading="lazy">
           <div class="category-overlay">
             <h3>Meble biurowe</h3>
             <p>Biurka, regały, zabudowy</p>
+            <span class="cat-count">3 zdjęcia →</span>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -612,10 +680,23 @@
     </div>
   </div>
 
+  <!-- GALLERY MODAL -->
+  <div class="gallery-modal" id="galleryModal" onclick="if(event.target===this)closeGallery()">
+    <div class="gallery-box">
+      <div class="gallery-header">
+        <h3 id="galleryTitle"></h3>
+        <button class="gallery-close" onclick="closeGallery()">&times;</button>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </div>
+
   <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" onclick="closeLB()">
-    <button class="lightbox-x" aria-label="Zamknij">&times;</button>
-    <img id="lbImg" src="" alt="">
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-x" onclick="closeLB()">&times;</button>
+    <button class="lb-nav lb-prev" onclick="lbPrev()">&#8249;</button>
+    <img id="lbImg" src="" alt="" onclick="closeLB()">
+    <button class="lb-nav lb-next" onclick="lbNext()">&#8250;</button>
   </div>
 
   <script>
@@ -627,13 +708,98 @@
       a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('open'))
     );
 
-    // Lightbox
-    function openLB(el) {
-      document.getElementById('lbImg').src = el.querySelector('img').src;
+    // Gallery data
+    const galleries = {
+      kuchenne: {
+        title: 'Meble kuchenne',
+        images: [
+          'images/kuchnia-biala.jpg','images/kuchnia-niebieska.jpg','images/kuchnia-zabudowa.jpg','images/kuchnia-cegla.jpg',
+          'images/kuchnia-gal-01.jpg','images/kuchnia-gal-02.jpg','images/kuchnia-gal-03.jpg','images/kuchnia-gal-04.jpg',
+          'images/kuchnia-gal-05.jpg','images/kuchnia-gal-06.jpg','images/kuchnia-gal-07.jpg','images/kuchnia-gal-08.jpg',
+          'images/kuchnia-gal-09.jpg','images/kuchnia-gal-10.jpg','images/kuchnia-gal-11.jpg','images/kuchnia-gal-12.jpg',
+          'images/kuchnia-gal-13.jpg','images/kuchnia-gal-14.jpg'
+        ]
+      },
+      salon: {
+        title: 'Meble do salonu',
+        images: [
+          'images/salon.jpg',
+          'images/salon-gal-01.jpg','images/salon-gal-02.jpg','images/salon-gal-03.jpg',
+          'images/salon-gal-04.jpg','images/salon-gal-05.jpg'
+        ]
+      },
+      szafy: {
+        title: 'Szafy na wymiar',
+        images: [
+          'images/szafa-lustra.jpg',
+          'images/szafy-gal-01.jpg','images/szafy-gal-02.jpg','images/szafy-gal-03.jpg','images/szafy-gal-04.jpg',
+          'images/szafy-gal-05.jpg','images/szafy-gal-06.jpg','images/szafy-gal-07.jpg','images/szafy-gal-08.jpg',
+          'images/szafy-gal-09.jpg','images/szafy-gal-10.jpg','images/szafy-gal-11.jpg'
+        ]
+      },
+      sypialnia: {
+        title: 'Meble do sypialni',
+        images: [
+          'images/szafa-skos.jpg',
+          'images/sypialnia-gal-01.jpg','images/sypialnia-gal-02.jpg',
+          'images/sypialnia-gal-03.jpg','images/sypialnia-gal-04.jpg'
+        ]
+      },
+      lazienka: {
+        title: 'Meble łazienkowe',
+        images: [
+          'images/lazienka.jpg',
+          'images/lazienka-gal-01.jpg','images/lazienka-gal-02.jpg'
+        ]
+      },
+      biurowe: {
+        title: 'Meble biurowe',
+        images: [
+          'images/pokoj.jpg',
+          'images/biurowe-gal-01.jpg','images/biurowe-gal-02.jpg'
+        ]
+      }
+    };
+
+    // Gallery modal
+    function openGallery(key) {
+      const g = galleries[key];
+      document.getElementById('galleryTitle').textContent = g.title;
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = g.images.map((src, i) =>
+        `<img src="${src}" alt="${g.title}" loading="lazy" onclick="openLB('${key}',${i})">`
+      ).join('');
+      document.getElementById('galleryModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeGallery() {
+      document.getElementById('galleryModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    // Lightbox with prev/next
+    let lbKey = null, lbIdx = 0;
+
+    function openLB(key, idx) {
+      lbKey = key; lbIdx = idx;
+      document.getElementById('lbImg').src = galleries[key].images[idx];
       document.getElementById('lightbox').classList.add('open');
     }
-    function closeLB() { document.getElementById('lightbox').classList.remove('open'); }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+    function closeLB() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+    function lbPrev() {
+      if (!lbKey) return;
+      const imgs = galleries[lbKey].images;
+      lbIdx = (lbIdx - 1 + imgs.length) % imgs.length;
+      document.getElementById('lbImg').src = imgs[lbIdx];
+    }
+    function lbNext() {
+      if (!lbKey) return;
+      const imgs = galleries[lbKey].images;
+      lbIdx = (lbIdx + 1) % imgs.length;
+      document.getElementById('lbImg').src = imgs[lbIdx];
+    }
 
     // Cookie banner
     function acceptCookies() {
@@ -651,7 +817,13 @@
     // Privacy modal
     function openPrivacy() { document.getElementById('privacyModal').classList.add('open'); }
     function closePrivacy() { document.getElementById('privacyModal').classList.remove('open'); }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePrivacy(); });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeLB(); closeGallery(); closePrivacy(); }
+      if (e.key === 'ArrowLeft') lbPrev();
+      if (e.key === 'ArrowRight') lbNext();
+    });
 
     // Reveal on scroll
     const obs = new IntersectionObserver(entries => {
